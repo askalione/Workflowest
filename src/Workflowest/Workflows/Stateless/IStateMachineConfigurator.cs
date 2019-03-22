@@ -6,7 +6,7 @@ using Workflowest.Workflows.Abstractions;
 
 namespace Workflowest.Workflows.Stateless
 {
-    interface IStateMachineConfigurator<TObject, TState, TEvent> where TObject : IStateObject<TState>
+    interface IStateMachineConfigurator<TObject, TState, TEvent> where TObject : class
     {
         void Configure(StateMachine<TState, TEvent> stateMachine, TObject @object);
     }

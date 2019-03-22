@@ -9,9 +9,12 @@ namespace Workflowest.Workflows.Impl
 {
     class CompetitionWorkflow : StatelessWorkflow<Competition, ECompetitionState, ECompetitionEvent>, ICompetitionWorkflow
     {
-        public CompetitionWorkflow(Competition competition, 
-            ICompetitionStateMachineConfigurator workflowConfigurator) : 
-            base(competition, workflowConfigurator)
+        public CompetitionWorkflow(Competition competition,
+            IStateMachineFactory<Competition, ECompetitionState, ECompetitionEvent> stateMachineFactory,
+            IStateMachineConfigurator<Competition, ECompetitionState, ECompetitionEvent> stateMachineConfigurator) : 
+            base(competition, 
+                stateMachineFactory,
+                stateMachineConfigurator)
         {
         }
         

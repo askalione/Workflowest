@@ -5,20 +5,25 @@ using Workflowest.Workflows.Abstractions;
 
 namespace Workflowest.Workflows.Stateless
 {
-    class StatelessWorkflow<TObject, TState, TEvent> : IWorkflow<TObject, TState, TEvent> where TObject : IStateObject<TState>
+    class StatelessWorkflow<TObject, TState, TEvent> : IWorkflow<TObject, TState, TEvent> where TObject : class
     {
+        private readonly IStateMachineFactory<TObject, TState, TEvent> _stateMachineFactory;
         private readonly IStateMachineConfigurator<TObject, TState, TEvent> _stateMachineConfigurator;
 
         public TObject Object { get; }
 
         protected StatelessWorkflow(TObject @object,
+            IStateMachineFactory<TObject, TState, TEvent> stateMachineFactory,
             IStateMachineConfigurator<TObject, TState, TEvent> stateMachineConfigurator)
         {
             if (@object == null)
                 throw new ArgumentNullException(nameof(@object));
+            if (stateMachineFactory == null)
+                throw new ArgumentNullException(nameof(stateMachineFactory));
             if (stateMachineConfigurator == null)
                 throw new ArgumentNullException(nameof(stateMachineConfigurator));
-            
+
+            _stateMachineFactory = stateMachineFactory;
             _stateMachineConfigurator = stateMachineConfigurator;
             Object = @object;
         }
@@ -43,7 +48,7 @@ namespace Workflowest.Workflows.Stateless
 
         private StateMachine<TState, TEvent> GetStateMachine()
         {
-            var stateMachine = new StateMachine<TState, TEvent>(() => Object.State, x => Object.ChangeState(x));
+            var stateMachine = _stateMachineFactory.CreateStateMachine(Object);
             _stateMachineConfigurator.Configure(stateMachine, Object);
             return stateMachine;
         }

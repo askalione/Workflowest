@@ -3,28 +3,28 @@ using System.Collections.Generic;
 using System.Text;
 using Workflowest.Domain;
 using Workflowest.Workflows.Abstractions;
+using Workflowest.Workflows.Stateless;
 
 namespace Workflowest.Workflows.Impl
 {
-    class CompetitionWorkflowProvider : ICompetitionWorkflowProvider
+    class CompetitionWorkflowProvider : StatelessWorkflowProvider<ICompetitionWorkflow, Competition, Guid, ECompetitionState, ECompetitionEvent>, ICompetitionWorkflowProvider
     {
         // NOTE: Inject Competition repository etc
 
-        private readonly ICompetitionStateMachineConfigurator _stateMachineConfigurator;
-
-        public CompetitionWorkflowProvider(ICompetitionStateMachineConfigurator stateMachineConfigurator)
+        public CompetitionWorkflowProvider(IStateMachineFactory<Competition, ECompetitionState, ECompetitionEvent> stateMachineFactory,
+            IStateMachineConfigurator<Competition, ECompetitionState, ECompetitionEvent> stateMachineConfigurator)
+            : base(stateMachineFactory, 
+                  stateMachineConfigurator)
         {
-            if (stateMachineConfigurator == null)
-                throw new ArgumentNullException(nameof(stateMachineConfigurator));
-
-            _stateMachineConfigurator = stateMachineConfigurator;
         }
 
-        public ICompetitionWorkflow GetWorkflowByObjectId(Guid id)
+        public override ICompetitionWorkflow GetWorkflowByObjectId(Guid id)
         {
             // Get competition from repository by general specification
             var competition = new Competition(id, "Competition #" + new Random().Next(1, 100).ToString(), 1);
-            return new CompetitionWorkflow(competition, _stateMachineConfigurator);
+            return new CompetitionWorkflow(competition, 
+                StateMachineFactory,
+                StateMachineConfigurator);
         }
     }
 }

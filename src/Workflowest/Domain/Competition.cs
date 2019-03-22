@@ -5,7 +5,7 @@ using Workflowest.Workflows.Abstractions;
 
 namespace Workflowest.Domain
 {
-    class Competition : IStateObject<ECompetitionState>
+    class Competition
     {
         public Guid Id { get; private set; }
         public ECompetitionState State { get; private set; }

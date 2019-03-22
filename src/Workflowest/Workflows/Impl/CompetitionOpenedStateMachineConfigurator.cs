@@ -4,10 +4,11 @@ using System.Text;
 using Stateless;
 using Workflowest.Domain;
 using Workflowest.Infrastructure;
+using Workflowest.Workflows.Stateless;
 
 namespace Workflowest.Workflows.Impl
 {
-    class CompetitionOpenedStateMachineConfigurator : ICompetitionStateMachineConfigurator
+    class CompetitionOpenedStateMachineConfigurator : IStateMachineConfigurator<Competition, ECompetitionState, ECompetitionEvent>
     {
         private readonly IActorProvider _actorProvider;
 

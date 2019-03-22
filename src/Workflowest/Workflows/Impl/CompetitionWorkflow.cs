@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Text;
 using Workflowest.Domain;
 using Workflowest.Workflows.Abstractions;
+using Workflowest.Workflows.Stateless;
 
 namespace Workflowest.Workflows.Impl
 {
-    class CompetitionWorkflow : Workflow<Competition, ECompetitionState, ECompetitionEvent>, ICompetitionWorkflow
+    class CompetitionWorkflow : StatelessWorkflow<Competition, ECompetitionState, ECompetitionEvent>, ICompetitionWorkflow
     {
-        public CompetitionWorkflow(ICompetitionWorkflowConfigurator workflowConfigurator, 
-            Competition competition) : 
-            base(workflowConfigurator, 
-                competition)
+        public CompetitionWorkflow(Competition competition, 
+            ICompetitionStateMachineConfigurator workflowConfigurator) : 
+            base(competition, workflowConfigurator)
         {
         }
         

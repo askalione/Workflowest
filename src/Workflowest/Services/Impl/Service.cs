@@ -7,14 +7,14 @@ namespace Workflowest.Services.Impl
 {
     class Service : IService
     {
-        private readonly ICompetitionWorkflowFactory _workflowFactory;
+        private readonly ICompetitionWorkflowProvider _workflowProvider;
 
-        public Service(ICompetitionWorkflowFactory workflowFactory)
+        public Service(ICompetitionWorkflowProvider workflowFactory)
         {
             if (workflowFactory == null)
                 throw new ArgumentNullException(nameof(workflowFactory));
 
-            _workflowFactory = workflowFactory;
+            _workflowProvider = workflowFactory;
         }
 
         public void Start()
@@ -23,9 +23,9 @@ namespace Workflowest.Services.Impl
             Guid id = Guid.NewGuid();
 
             // Get workflow
-            var workflow = _workflowFactory.CreateWorkflow(id);
+            var workflow = _workflowProvider.GetWorkflowByObjectId(id);
 
-            var permittedEvents = workflow.PermittedEvents;
+            var permittedEvents = workflow.GetPermittedEvents();
 
             // Lets start
 

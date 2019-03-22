@@ -7,11 +7,11 @@ using Workflowest.Infrastructure;
 
 namespace Workflowest.Workflows.Impl
 {
-    class CompetitionWorkflowOpenedStateConfigurator : ICompetitionWorkflowConfigurator
+    class CompetitionOpenedStateMachineConfigurator : ICompetitionStateMachineConfigurator
     {
         private readonly IActorProvider _actorProvider;
 
-        public CompetitionWorkflowOpenedStateConfigurator(IActorProvider actorProvider)
+        public CompetitionOpenedStateMachineConfigurator(IActorProvider actorProvider)
         {
             if (actorProvider == null)
                 throw new ArgumentNullException(nameof(actorProvider));

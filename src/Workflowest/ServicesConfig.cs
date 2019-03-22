@@ -20,26 +20,26 @@ namespace Workflowest
             services.AddScoped<IActorProvider, ActorProvider>();
             services.AddScoped<IService, Service>();
 
-            services.AddScoped<CompetitionWorkflowOnEditStateConfigurator>();
-            services.AddScoped<CompetitionWorkflowOnModerationStateConfigurator>();
-            services.AddScoped<CompetitionWorkflowOpenedStateConfigurator>();
-            services.AddScoped<Func<ECompetitionState, ICompetitionWorkflowConfigurator>>(serviceProvider => state =>
+            services.AddScoped<CompetitionOnEditStateMachineConfigurator>();
+            services.AddScoped<CompetitionOnModerationStateMachineConfigurator>();
+            services.AddScoped<CompetitionOpenedStateMachineConfigurator>();
+            services.AddScoped<Func<ECompetitionState, ICompetitionStateMachineConfigurator>>(serviceProvider => state =>
             {
                 switch (state)
                 {
                     case ECompetitionState.OnEdit:
-                        return serviceProvider.GetService<CompetitionWorkflowOnEditStateConfigurator>();
+                        return serviceProvider.GetService<CompetitionOnEditStateMachineConfigurator>();
                     case ECompetitionState.OnModeration:
-                        return serviceProvider.GetService<CompetitionWorkflowOnModerationStateConfigurator>();
+                        return serviceProvider.GetService<CompetitionOnModerationStateMachineConfigurator>();
                     case ECompetitionState.Opened:
-                        return serviceProvider.GetService<CompetitionWorkflowOpenedStateConfigurator>();
+                        return serviceProvider.GetService<CompetitionOpenedStateMachineConfigurator>();
                     default:
                         throw new InvalidOperationException($"Configurator for state {state.ToString()} not found"); 
                 }
             });
 
-            services.AddScoped<ICompetitionWorkflowConfigurator, CompetitionWorkflowConfigurator>();
-            services.AddScoped<ICompetitionWorkflowFactory, CompetitionWorkflowFactory>();
+            services.AddScoped<ICompetitionStateMachineConfigurator, CompetitionStateMachineConfigurator>();
+            services.AddScoped<ICompetitionWorkflowProvider, CompetitionWorkflowProvider>();
         }
     }
 }

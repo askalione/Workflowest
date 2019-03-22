@@ -6,7 +6,7 @@ using Workflowest.Workflows.Abstractions;
 
 namespace Workflowest.Workflows
 {
-    interface ICompetitionWorkflowConfigurator : IWorkflowConfigurator<Competition, ECompetitionState, ECompetitionEvent>
-    {
+    interface ICompetitionWorkflowProvider : IWorkflowProvider<ICompetitionWorkflow, Competition, Guid, ECompetitionState, ECompetitionEvent>
+    { 
     }
 }

@@ -4,14 +4,15 @@ using System.Text;
 using Stateless;
 using Workflowest.Domain;
 using Workflowest.Infrastructure;
+using Workflowest.Workflows.Abstractions;
 
 namespace Workflowest.Workflows.Impl
 {
-    class CompetitionWorkflowConfigurator : ICompetitionWorkflowConfigurator
+    class CompetitionStateMachineConfigurator : ICompetitionStateMachineConfigurator
     {
-        private readonly Func<ECompetitionState, ICompetitionWorkflowConfigurator> _configurators;
+        private readonly Func<ECompetitionState, ICompetitionStateMachineConfigurator> _configurators;
 
-        public CompetitionWorkflowConfigurator(Func<ECompetitionState, ICompetitionWorkflowConfigurator> configurators)
+        public CompetitionStateMachineConfigurator(Func<ECompetitionState, ICompetitionStateMachineConfigurator> configurators)
         {
             if (configurators == null)
                 throw new ArgumentNullException(nameof(configurators));

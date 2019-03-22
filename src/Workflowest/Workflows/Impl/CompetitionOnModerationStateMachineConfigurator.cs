@@ -7,12 +7,12 @@ using Workflowest.Infrastructure;
 
 namespace Workflowest.Workflows.Impl
 {
-    class CompetitionWorkflowOnEditStateConfigurator : ICompetitionWorkflowConfigurator
+    class CompetitionOnModerationStateMachineConfigurator : ICompetitionStateMachineConfigurator
     {
         private readonly IUserPrincipalProvider _userPrincipalProvider;
         private readonly IActorProvider _actorProvider;
 
-        public CompetitionWorkflowOnEditStateConfigurator(IUserPrincipalProvider userPrincipalProvider,
+        public CompetitionOnModerationStateMachineConfigurator(IUserPrincipalProvider userPrincipalProvider,
             IActorProvider actorProvider)
         {
             if (userPrincipalProvider == null)
@@ -29,9 +29,9 @@ namespace Workflowest.Workflows.Impl
             ICompetitionWorkflowGuard competitionGuard = new CompetitionWorkflowGuard(_userPrincipalProvider,
                 competition);
 
-            stateMachine.Configure(ECompetitionState.OnEdit)
-                .PermitIf(ECompetitionEvent.SendToModeration, ECompetitionState.OnModeration, () => _actorProvider.CurrentActorIs(EActor.User) && competitionGuard.ActorIsCreator);
-
+            stateMachine.Configure(ECompetitionState.OnModeration)
+                .PermitIf(ECompetitionEvent.Open, ECompetitionState.Opened, () => _actorProvider.CurrentActorIs(EActor.User))
+                .PermitIf(ECompetitionEvent.ReturnToEdit, ECompetitionState.OnEdit, () => _actorProvider.CurrentActorIs(EActor.User) && _userPrincipalProvider.CurrentUserHasPermission(EPermission.CompetitionModerate) && competitionGuard.HasReasonToFix);
         }
     }
 }
